@@ -1,0 +1,5 @@
+tags
+*.pyc
+__pycache__
+static
+*sqlite3
