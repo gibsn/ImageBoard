@@ -2,4 +2,9 @@ tags
 *.pyc
 __pycache__
 static
-*sqlite3
+*.sqlite3
+deploy.sh
+*.json
+
+*.crt
+*.key
