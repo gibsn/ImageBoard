@@ -5,7 +5,7 @@
 
 {% block content %}
     {% block new_message %}
-    <form action="{% url 'board_api:post_new_message' %}" method="post">
+    <form action="{% url 'board_api:post_new_message' %}" method="post" enctype="multipart/form-data">
     <!-- <form action="/api/board/new" method="post"> -->
         {% csrf_token %}
         <p><h2>New message:</h2></p>
@@ -20,7 +20,11 @@
             {{ message.get_author }} at {{ message.datetime }}:
             <strong>{{ message.subject }}</strong>
             {% filter linebreaksbr %}{{ message.body }}{% endfilter %}
-            {% if  message.image %}<img src="{{ message.image }}">{% endif %}
+            {% if  message.image %}
+                <a href="{{ MEDIA_URL }}{{ message.image }}">
+                    <img src="{{ MEDIA_URL }}{{ message.image }}" height="150" width="150">
+                </a>
+            {% endif %}
             {% endfilter %}
         {% endfor %}
     {% endblock %}
