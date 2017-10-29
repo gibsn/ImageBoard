@@ -5,6 +5,8 @@ static
 *.sqlite3
 deploy.sh
 *.json
+.idea
+migrations
 
 *.crt
 *.key

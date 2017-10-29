@@ -1,0 +1,27 @@
+{% extends 'board/base.html' %}
+{% block title %}ImageBoard{% endblock %}
+
+{% block branding %}<h1 id="site-name">ImageBoard</h1>{% endblock %}
+
+{% block content %}
+    {% block new_message %}
+    <form action="{% url 'board_api:post_new_message' %}" method="post">
+    <!-- <form action="/api/board/new" method="post"> -->
+        {% csrf_token %}
+        <p><h2>New message:</h2></p>
+        {{ new_message_form.as_p }}
+        <button type="submit" class="save btn btn-default">Publish</button>
+    </form>
+    {% endblock %}
+
+    {%  block messages %}
+        {% for message in messages %}
+            {% filter linebreaks %}
+            {{ message.get_author }} at {{ message.datetime }}:
+            <strong>{{ message.subject }}</strong>
+            {% filter linebreaksbr %}{{ message.body }}{% endfilter %}
+            {% if  message.image %}<img src="{{ message.image }}">{% endif %}
+            {% endfilter %}
+        {% endfor %}
+    {% endblock %}
+{% endblock %}
