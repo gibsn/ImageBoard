@@ -2,6 +2,7 @@ tags
 *.pyc
 __pycache__
 static
+media
 *.sqlite3
 deploy.sh
 *.json

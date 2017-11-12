@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^$', board.views.index, name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'^board/', include('board.urls')),
+    url(r'^users/', include('users.urls')),
 ]
 
 if settings.DEBUG:
@@ -35,4 +36,5 @@ if settings.DEBUG:
 # API
 urlpatterns.extend([
     url(r'api/board/', include('board.urls_api')),
+    url(r'api/users/', include('users.urls_api')),
 ])
