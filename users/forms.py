@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, PasswordInput
 from django.contrib.auth import models as auth_models
 
 

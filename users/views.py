@@ -1,3 +1,4 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django.http import *
 from django.shortcuts import render
 
@@ -20,7 +21,11 @@ def get_profile(request):
     return render(request, "users/profile.html", context)
 
 def sign_in(request):
-    return HttpResponse("sign in")
+    context = {
+        'sign_in_form': AuthenticationForm(),
+    }
+
+    return render(request, "users/signin.html", context)
 
 def sign_up(request):
     return HttpResponse("sign up")
