@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}ImageBoard{% endblock %}
+
+{% block error %}
+    {% if error %}
+    {{ error }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'users_api:sign_in' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ sign_in_form.as_p }}
+        <button type="submit">Sign in</button>
+    </form>
+{% endblock %}

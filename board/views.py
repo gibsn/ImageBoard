@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import *
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -8,10 +9,25 @@ from django.utils import timezone
 from .models import Message
 from .forms import NewMessageForm
 
+from ImageBoard.settings import get_param
+
 
 def index(request):
+    n = get_param("messages_per_page")
+    paginator = Paginator(Message.objects.all().order_by("-datetime"), n)
+
+    page = request.GET.get('page')
+    page = page if page else 1
+
+    try:
+        messages = paginator.page(page)
+    except PageNotAnInteger:
+        return HttpResponseBadRequest("bad request")
+    except EmptyPage:
+        return HttpResponseNotFound("not found")
+
     context = {
-        'messages': reversed(Message.objects.all()),
+        'messages': messages,
         'new_message_form': NewMessageForm(),
     }
 
