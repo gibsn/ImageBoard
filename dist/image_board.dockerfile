@@ -5,7 +5,7 @@ EXPOSE 8000
 WORKDIR /usr/local/image_board
 
 COPY dist/requirements.txt .
-copy cfg.json .
+COPY cfg.json .
 COPY ImageBoard ./ImageBoard
 COPY manage.py .
 

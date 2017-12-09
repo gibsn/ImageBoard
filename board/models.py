@@ -5,7 +5,7 @@ MAX_SUBJECT_LENGTH = 256
 
 
 class Message(db_models.Model):
-    author = db_models.ForeignKey(auth_models.User, null=True)
+    author = db_models.ForeignKey(auth_models.User, on_delete=db_models.CASCADE, null=True)
     datetime = db_models.DateTimeField(null=False)
     subject = db_models.CharField(null=False, max_length=MAX_SUBJECT_LENGTH)
     body = db_models.TextField(null=False)
