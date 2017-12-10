@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -13,7 +14,7 @@ class MyUserAdmin(UserAdmin):
             user.is_authenticated and not user.is_superuser and
             user_to_change.is_staff and not user == user_to_change
         ):
-            return HttpResponseForbidden("forbidden")
+            raise PermissionDenied
 
         return super().user_change_password(request, id, form_url)
 
@@ -25,10 +26,11 @@ class MyUserAdmin(UserAdmin):
             return super().change_view(request, object_id, form_url, extra_context)
 
         if user.is_authenticated and user != user_to_change and user_to_change.is_staff:
-            return HttpResponseForbidden("forbidden")
+            raise PermissionDenied
 
         self.fieldsets = (
             (None, {'fields': ('password',)}),
+            (None, {'fields': ('is_staff',)}),
         )
 
         return super().change_view(request, object_id, form_url, extra_context)
