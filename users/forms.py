@@ -1,11 +1,29 @@
 from django.forms import ModelForm, PasswordInput
-from django.contrib.auth import models as auth_models
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.conf import settings
 
 
-class UserForm(ModelForm):
+class UserProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields["picture"].required = False
+
     class Meta:
-        model = auth_models.User
-        fields = ('username', 'first_name', 'last_name', 'email')
+        model = get_user_model()
+        fields = ('username', 'first_name', 'last_name', 'email', 'picture')
+
+
+class SignUpForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["picture"].required = False
+
+#     class Meta:
+#         model = get_user_model()
+#         fields = ('username', 'first_name', 'last_name', 'email', 'picture')
+#
+#
+# class UserAdminForm(UserChangeForm):

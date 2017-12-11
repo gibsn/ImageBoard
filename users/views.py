@@ -1,24 +1,39 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user, get_user_model
 from django.http import *
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from .forms import UserForm
+from .forms import UserProfileForm, SignUpForm
 
 
 def get_profile(request):
-    user_form = UserForm()
-    initial_dict = {
-        'username': request.user.username,
-        'first_name': request.user.first_name,
-        'last_name': request.user.last_name,
-        'email': request.user.email,
-    }
+    user = get_user(request)
 
-    context = {
-        'user_form': UserForm(initial=initial_dict),
-    }
+    if request.method == 'GET':
+        user_form = UserProfileForm()
+        initial_dict = {
+            'username':   user.username,
+            'first_name': user.first_name,
+            'last_name':  user.last_name,
+            'email':      user.email,
+            'picture':    user.picture,
+        }
 
-    return render(request, "users/profile.html", context)
+        context = {
+            'user_form': UserProfileForm(initial=initial_dict),
+        }
+
+        return render(request, "users/profile.html", context)
+
+    form = UserProfileForm(request.POST, instance=user)
+    if form.is_valid():
+        user_edited = form.save(commit=False)
+        user_edited.picture = request.FILES.get("picture")
+        user_edited.save()
+
+        return redirect('users:profile')
+
+    return HttpResponseBadRequest("bad request")
 
 def sign_in(request):
     context = {
