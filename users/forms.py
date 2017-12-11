@@ -8,6 +8,8 @@ class UserProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields["first_name"].required = False
+        self.fields["last_name"].required = False
         self.fields["picture"].required = False
 
     class Meta:
@@ -19,11 +21,13 @@ class SignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields["first_name"].required = False
+        self.fields["last_name"].required = False
         self.fields["picture"].required = False
 
-#     class Meta:
-#         model = get_user_model()
-#         fields = ('username', 'first_name', 'last_name', 'email', 'picture')
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'first_name', 'last_name', 'email', 'picture')
 #
 #
 # class UserAdminForm(UserChangeForm):

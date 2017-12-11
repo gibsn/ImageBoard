@@ -63,4 +63,21 @@ def sign_in(request):
     return render(request, "users/signin.html", context)
 
 def sign_up(request):
-    return HttpResponse("sign up")
+    user = get_user(request)
+
+    if request.method == 'GET':
+        context = {
+            'sign_up_form': SignUpForm(),
+        }
+
+        return render(request, "users/signup.html", context)
+
+    form = SignUpForm(request.POST)
+    if form.is_valid():
+        new_user = form.save(commit=False)
+        new_user.is_active = False
+        # send email here
+        new_user.save()
+        return redirect('index')
+
+    return HttpResponseBadRequest("bad request")
