@@ -1,5 +1,6 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import get_user, get_user_model
+from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user, get_user_model, update_session_auth_hash
 from django.http import *
 from django.shortcuts import render, redirect
 
@@ -10,7 +11,6 @@ def get_profile(request):
     user = get_user(request)
 
     if request.method == 'GET':
-        user_form = UserProfileForm()
         initial_dict = {
             'username':   user.username,
             'first_name': user.first_name,
@@ -32,6 +32,26 @@ def get_profile(request):
         user_edited.save()
 
         return redirect('users:profile')
+
+    return HttpResponseBadRequest("bad request")
+
+def change_password(request):
+    user = get_user(request)
+
+    if request.method == 'GET':
+        context = {
+            'password_form': SetPasswordForm(user),
+        }
+
+        return render(request, "users/change_password.html", context)
+
+    form = SetPasswordForm(user, request.POST)
+    if form.is_valid():
+        form.save()
+        update_session_auth_hash(request, form.user)
+        authenticate(request)
+        login(request, form.user)
+        return redirect('index')
 
     return HttpResponseBadRequest("bad request")
 
