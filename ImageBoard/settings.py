@@ -40,6 +40,12 @@ DEBUG = get_param("debug")
 
 ALLOWED_HOSTS = get_param("allowed_hosts")
 
+EMAIL_HOST = get_param("email_host")
+EMAIL_PORT = get_param("email_port")
+EMAIL_HOST_USER = get_param("email_host_user")
+EMAIL_HOST_PASSWORD = get_param("email_host_password")
+EMAIL_USE_SSL = True
+
 
 # Application definition
 
@@ -115,6 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PASSWORD_RESET_TIMEOUT_DAYS = get_param("token_timeout_days")
 AUTH_USER_MODEL = "users.User"
 
 
