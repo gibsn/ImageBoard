@@ -2,6 +2,8 @@ import datetime
 import logging
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth import get_user
 from django.http import *
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -61,3 +63,14 @@ def post_new_message(request):
         ))
 
         return HttpResponseBadRequest()
+
+def delete_message(request, message_id):
+    user = get_user(request)
+    message = Message.objects.get(id=message_id)
+
+    if not user == message.author:
+        raise PermissionDenied
+
+    message.delete()
+
+    return redirect('index')

@@ -36,9 +36,10 @@
     </form>
     {% endblock %}
 
-    {%  block messages %}
+    {% block messages %}
+    {% filter linebreaks %}
     {% for message in messages %}
-        {% filter linebreaks %}
+        {% if request.user == message.author %}<a href="api/board/delete/{{ message.id }}">delete</a> edit{% endif %}
         {{ message.get_author }} at {{ message.datetime }}:
         <strong>{{ message.subject }}</strong>
         {% filter linebreaksbr %}{{ message.body }}{% endfilter %}
@@ -47,8 +48,8 @@
                 <img src="{{ MEDIA_URL }}{{ message.image }}" height="150" width="150">
             </a>
         {% endif %}
-        {% endfilter %}
     {% endfor %}
+    {% endfilter %}
     {% endblock %}
 
     <div class="pagination">
