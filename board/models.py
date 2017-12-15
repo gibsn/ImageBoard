@@ -10,6 +10,7 @@ class Message(db_models.Model):
     subject = db_models.CharField(null=False, max_length=MAX_SUBJECT_LENGTH)
     body = db_models.TextField(null=False)
     image = db_models.ImageField(null=True)
+    is_edited = db_models.BooleanField(default=False)
 
     def get_author(self):
         return self.author.get_username() if self.author else "anonymous"

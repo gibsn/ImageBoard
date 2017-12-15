@@ -12,3 +12,14 @@ class NewMessageForm(ModelForm):
     class Meta:
         model = models.Message
         fields = ('subject', 'body', 'image',)
+
+class EditMessageForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["image"].required = False
+
+    class Meta:
+        model = models.Message
+        fields = ('subject', 'body', 'image',)
+

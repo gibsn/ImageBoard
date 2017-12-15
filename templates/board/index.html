@@ -37,19 +37,21 @@
     {% endblock %}
 
     {% block messages %}
-    {% filter linebreaks %}
     {% for message in messages %}
-        {% if request.user == message.author %}<a href="api/board/delete/{{ message.id }}">delete</a> edit{% endif %}
-        {{ message.get_author }} at {{ message.datetime }}:
+        {% if request.user == message.author %}
+        <a href="/board/edit/{{ message.id }}">edit</a> |
+        <a href="/api/board/delete/{{ message.id }}">delete</a>
+        {% endif %}
+        {% filter linebreaks %}{{ message.get_author }} at {{ message.datetime }}{% if message.is_edited %} (edited){% endif %}:
         <strong>{{ message.subject }}</strong>
         {% filter linebreaksbr %}{{ message.body }}{% endfilter %}
         {% if  message.image %}
-            <a href="{{ MEDIA_URL }}{{ message.image }}">
-                <img src="{{ MEDIA_URL }}{{ message.image }}" height="150" width="150">
-            </a>
+        <a href="{{ MEDIA_URL }}{{ message.image }}">
+            <img src="{{ MEDIA_URL }}{{ message.image }}" height="150" width="150">
+        </a>
         {% endif %}
+        {% endfilter %}
     {% endfor %}
-    {% endfilter %}
     {% endblock %}
 
     <div class="pagination">
