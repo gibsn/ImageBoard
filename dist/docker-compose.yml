@@ -1,4 +1,4 @@
-version: "3"
+version: "3.1"
 services:
   imageboard:
     container_name: imageboard
@@ -12,7 +12,9 @@ services:
     volumes:
         - static:/static
         - media:/media
-        - ../certs:/etc/ssl/certs
+    secrets:
+        - server.key
+        - server.crt
     depends_on:
         - imageboard
     ports:
@@ -22,3 +24,9 @@ services:
 volumes:
     static:
     media:
+
+secrets:
+    server.key:
+        file: ../certs/server.key
+    server.crt:
+        file: ../certs/server.crt
