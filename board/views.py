@@ -20,7 +20,7 @@ def index(request):
     try:
         messages = paginator.page(page)
     except PageNotAnInteger:
-        return HttpResponseBadRequest("bad request")
+        return HttpResponseBadRequest("wrong page number")
     except EmptyPage:
         return HttpResponseNotFound("not found")
 

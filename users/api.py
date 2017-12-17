@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.http import *
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
 
@@ -13,7 +13,7 @@ from .forms import UserProfileForm, SignUpForm
 def sign_in(request):
     sign_in_form = AuthenticationForm(data=request.POST)
     if not sign_in_form.is_valid():
-        return redirect('users:sign_in')
+        return render(request, "error.html", {"form": sign_in_form})
 
     username = sign_in_form.cleaned_data['username']
     password = sign_in_form.cleaned_data['password']
@@ -27,11 +27,11 @@ def sign_in(request):
     return redirect('index')
 
 def sign_up(request):
-    form = SignUpForm(request.POST)
-    if not form.is_valid():
-        return HttpResponseBadRequest("bad request")
+    sign_up_form = SignUpForm(request.POST)
+    if not sign_up_form.is_valid():
+        return render(request, "error.html", {"form": sign_up_form})
 
-    new_user = form.save(commit=False)
+    new_user = sign_up_form.save(commit=False)
     new_user.is_active = False
     new_user.save()
 
@@ -53,7 +53,7 @@ def sign_out(request):
 def change_password(request):
     form = SetPasswordForm(request.user, request.POST)
     if not form.is_valid():
-        return HttpResponseBadRequest("bad request")
+        return render(request, "error.html", {"form": form})
 
     form.save()
     update_session_auth_hash(request, form.user)
@@ -64,7 +64,7 @@ def change_password(request):
 def change_profile(request):
     form = UserProfileForm(request.POST, instance=request.user)
     if not form.is_valid():
-        return HttpResponseBadRequest("bad request")
+        return render(request, "error.html", {"form": form})
 
     user_edited = form.save(commit=False)
     user_edited.picture = request.FILES.get("picture")
@@ -75,10 +75,10 @@ def change_profile(request):
 def verify(request, uid, token):
     user = get_user_model().objects.get(pk=uid)
     if user == None:
-        return HttpResponseBadRequest("bad request")
+        return HttpResponseBadRequest("no such user")
 
     if not PasswordResetTokenGenerator().check_token(user, token):
-        return HttpResponseBadRequest("bad request")
+        return HttpResponseBadRequest("invalid token")
 
     user.is_active = True
     user.save()

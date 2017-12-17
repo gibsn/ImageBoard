@@ -21,7 +21,7 @@ def post_new_message(request):
             ''.join(["{} ({})".format(k, v) for k, v in new_message_form.errors.items()])
         ))
 
-        return HttpResponseBadRequest()
+        return render(request, "error.html", {"form": new_message_form})
 
     new_message = new_message_form.save(commit=False)
 
