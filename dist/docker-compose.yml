@@ -1,17 +1,18 @@
 version: "3"
 services:
   imageboard:
-    build:
-      context: ../
-      dockerfile: dist/image_board.dockerfile
+    container_name: imageboard
+    image: gibsn/imageboard
     volumes:
-        - "static:/static"
+        - static:/usr/local/imageboard/static
+        - media:/usr/local/imageboard/media
   nginx:
-    build:
-      context: ../
-      dockerfile: dist/nginx.dockerfile
+    container_name: nginx
+    image: gibsn/nginx
     volumes:
-        - "static:/static"
+        - static:/static
+        - media:/media
+        - ../certs:/etc/ssl/certs
     depends_on:
         - imageboard
     ports:
@@ -20,3 +21,4 @@ services:
 
 volumes:
     static:
+    media:
