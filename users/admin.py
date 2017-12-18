@@ -32,7 +32,7 @@ class MyUserAdmin(UserAdmin):
 
         self.fieldsets = (
             (None, {'fields': ('password',)}),
-            (None, {'fields': ('is_staff',)}),
+            (None, {'fields': ('is_staff', 'groups',)}),
         )
 
         return super().change_view(request, object_id, form_url, extra_context)
