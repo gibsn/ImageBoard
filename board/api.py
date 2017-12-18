@@ -61,6 +61,8 @@ def edit_message(request, message_id):
     edited_message.is_edited = True
 
     if request.FILES.get("image"):
+        if edited_message.image:
+            edited_message.image.delete()
         edited_message.image = request.FILES.get("image")
 
     edited_message.save()

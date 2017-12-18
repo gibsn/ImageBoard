@@ -69,6 +69,8 @@ def change_profile(request):
 
     user_edited = form.save(commit=False)
     if request.FILES.get("image"):
+        if user_edited.image:
+            user_edited.image.delete()
         user_edited.image = request.FILES.get("image")
 
     user_edited.save()

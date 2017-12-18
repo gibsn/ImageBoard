@@ -10,8 +10,8 @@ class MessageAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         if request.path == "/admin/" or request.path == "/admin/board/message/":
             return True
-        else:
-            return super().has_change_permission(request, obj)
+
+        return super().has_change_permission(request, obj)
 
 
 admin.site.register(Message, MessageAdmin)

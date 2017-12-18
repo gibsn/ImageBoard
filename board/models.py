@@ -14,3 +14,9 @@ class Message(models.Model):
 
     def get_author(self):
         return self.author.get_username() if self.author else "anonymous"
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.image.delete()
+
+        return super().delete(*args, **kwargs)
