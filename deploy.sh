@@ -2,15 +2,30 @@
 
 # installing docker
 if [ `uname` == "Linux" ]; then
-    wget "https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_17.09.1~ce-0~ubuntu_amd64.deb" -O docker.deb
-    sudo dpkg -i docker.deb
-    docker run hello-world || exit
+    sudo apt-get update -q
+    sudo apt-get install -y -q \
+        apt-transport-https \
+        ca-certificates \
+        software-properties-common \
+        curl
 
-    sudo curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+
+    sudo apt-get update -q
+    sudo apt-get install -y -q docker-ce
+
+    sudo docker run hello-world || exit
+
+    which docker-compose || sudo curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
-    docker-compose --version || exit
+    sudo docker-compose --version || exit
 
-    sudo apt install -y python || exit
+    sudo apt install -y -q python || exit
 fi
 
 # generating selfsigned ssl certificates
@@ -21,8 +36,8 @@ if [ ! -f certs/server.key ] || [ ! -f certs/server.crt ]; then
 fi
 
 # building docker images from source
-docker build ./ -f dist/imageboard.dockerfile -t gibsn/imageboard || exit
-docker build ./ -f dist/nginx.dockerfile -t gibsn/nginx || exit
+sudo docker build ./ -f dist/imageboard.dockerfile -t gibsn/imageboard || exit
+sudo docker build ./ -f dist/nginx.dockerfile -t gibsn/nginx || exit
 
 # making imageboard config
 secret_key=$(python -c "import string,random; uni=string.ascii_letters+string.digits; print ''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))])")
@@ -55,15 +70,15 @@ cat > _cfg.json << EOM
 EOM
 
 # launching services
-docker-compose -f dist/docker-compose.yml up -d || exit
+sudo docker-compose -f dist/docker-compose.yml up -d || exit
 
-docker exec -u root -it imageboard python manage.py migrate || exit
-docker exec -u root -it imageboard python manage.py collectstatic --noinput || exit
+sudo docker exec -u root -it imageboard python manage.py collectstatic --noinput || exit
+sudo docker exec -u root -it imageboard python manage.py makemigrations board users || exit
+sudo docker exec -u root -it imageboard python manage.py migrate
 
-docker exec -u root -it imageboard chown imageboard:imageboard media || exit
-docker exec -u root -it imageboard chown imageboard:imageboard db.sqlite3 || exit
+sudo docker exec -u root -it imageboard chown imageboard:imageboard media || exit
 
 echo "gonna create a superuser"
-docker exec -u root -it imageboard python manage.py createsuperuser || exit
+sudo docker exec -u root -it imageboard python manage.py createsuperuser || exit
 
 echo "done"
