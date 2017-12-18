@@ -26,8 +26,6 @@ def post_new_message(request):
     new_message = new_message_form.save(commit=False)
 
     new_message.author = user if user.is_authenticated else None
-    new_message.subject = new_message_form.cleaned_data["subject"]
-    new_message.body = new_message_form.cleaned_data["body"]
     new_message.image = request.FILES.get("image")
 
     dt = datetime.datetime.now()

@@ -77,6 +77,7 @@ sudo docker exec -u root -it imageboard python manage.py makemigrations board us
 sudo docker exec -u root -it imageboard python manage.py migrate
 
 sudo docker exec -u root -it imageboard chown imageboard:imageboard media || exit
+sudo docker exec -u root -it imageboard chown imageboard:imageboard db.sqlite3 || exit
 
 echo "gonna create a superuser"
 sudo docker exec -u root -it imageboard python manage.py createsuperuser || exit
