@@ -59,7 +59,10 @@ def edit_message(request, message_id):
 
     edited_message = edit_message_form.save(commit=False)
     edited_message.is_edited = True
-    edited_message.image = request.FILES.get("image")
+
+    if request.FILES.get("image"):
+        edited_message.image = request.FILES.get("image")
+
     edited_message.save()
 
     return redirect('index')

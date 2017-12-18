@@ -10,11 +10,11 @@ class UserProfileForm(ModelForm):
 
         self.fields["first_name"].required = False
         self.fields["last_name"].required = False
-        self.fields["picture"].required = False
+        self.fields["image"].required = False
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'first_name', 'last_name', 'email', 'picture')
+        fields = ('username', 'first_name', 'last_name', 'email', 'image')
 
 
 class SignUpForm(UserCreationForm):
@@ -23,11 +23,8 @@ class SignUpForm(UserCreationForm):
 
         self.fields["first_name"].required = False
         self.fields["last_name"].required = False
-        self.fields["picture"].required = False
+        self.fields["image"].required = False
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'first_name', 'last_name', 'email', 'picture')
-#
-#
-# class UserAdminForm(UserChangeForm):
+        fields = ('username', 'first_name', 'last_name', 'email', 'image')

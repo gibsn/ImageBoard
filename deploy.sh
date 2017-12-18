@@ -43,7 +43,7 @@ sudo docker build ./ -f dist/nginx.dockerfile -t gibsn/nginx || exit
 secret_key=$(python -c "import string,random; uni=string.ascii_letters+string.digits; print ''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))])")
 
 email="imageboardmailer@mail.ru"
-echo "password for $email:"
+echo -n "password for $email: "
 read password
 
 cat > _cfg.json << EOM

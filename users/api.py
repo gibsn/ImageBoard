@@ -33,6 +33,7 @@ def sign_up(request):
 
     new_user = sign_up_form.save(commit=False)
     new_user.is_active = False
+    new_user.image = request.FILES.get("image")
     new_user.save()
 
     token = PasswordResetTokenGenerator().make_token(new_user)
@@ -67,7 +68,9 @@ def change_profile(request):
         return render(request, "error.html", {"form": form})
 
     user_edited = form.save(commit=False)
-    user_edited.picture = request.FILES.get("picture")
+    if request.FILES.get("image"):
+        user_edited.image = request.FILES.get("image")
+
     user_edited.save()
 
     return redirect('users:profile')
