@@ -42,6 +42,9 @@ sudo docker build ./ -f dist/nginx.dockerfile -t gibsn/nginx || exit
 # making imageboard config
 secret_key=$(python -c "import string,random; uni=string.ascii_letters+string.digits; print ''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))])")
 
+echo -n "server name (will be compared to the host header):"
+read server_name
+
 email="imageboardmailer@mail.ru"
 echo -n "password for $email: "
 read password
@@ -49,7 +52,7 @@ read password
 cat > _cfg.json << EOM
 {
     "debug": true,
-    "allowed_hosts": ["127.0.0.1"],
+    "allowed_hosts": ["$server_name"],
 
     "messages_per_page": 5,
 
