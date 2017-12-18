@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.3"
 services:
   imageboard:
     container_name: imageboard
@@ -6,6 +6,9 @@ services:
     volumes:
         - static:/usr/local/imageboard/static
         - media:/usr/local/imageboard/media
+    secrets:
+        - source: cfg.json
+          target: /usr/local/imageboard/cfg.json
   nginx:
     container_name: nginx
     image: gibsn/nginx
@@ -15,6 +18,8 @@ services:
     secrets:
         - server.key
         - server.crt
+        - source: nginx.conf
+          target: /etc/nginx/nginx.conf
     depends_on:
         - imageboard
     ports:
@@ -26,7 +31,11 @@ volumes:
     media:
 
 secrets:
+    cfg.json:
+        file: ../_cfg.json
     server.key:
         file: ../certs/server.key
     server.crt:
         file: ../certs/server.crt
+    nginx.conf:
+        file: nginx.conf
